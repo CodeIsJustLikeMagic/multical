@@ -1,5 +1,5 @@
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from multiprocessing import cpu_count
 import os
 from typing import List, Optional, Union
@@ -20,7 +20,7 @@ class PathOpts:
   image_path: str = "."                 # Path to search for image folders
   boards : Optional[str] = None         # Configuration file (YAML) for calibration boards
   camera_pattern: Optional[str] = None  # Camera apth pattern example "{camera}/extrinsic"
-  cameras: List[str] = list_field()     # Explicit camera list
+  cameras: List[str] = field(default_factory=list)#list_field()     # Explicit camera list
 
   limit_images: Optional[int] = 200   # Limit images to enable faster calibration
 

@@ -141,3 +141,12 @@ cython_debug/
 # IDE settings
 .vscode
 .idea
+
+
+cam0/*
+cam1/*
+*log.txt
+*.pkl
+*.json
+/charuco_board_image/*
+calibration.txt
