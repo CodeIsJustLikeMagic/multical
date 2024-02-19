@@ -2,6 +2,7 @@ from cached_property import cached_property
 import numpy as np
 from structs.struct import struct
 
+
 class Board(object):
   
   def export(self):

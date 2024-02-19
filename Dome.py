@@ -11,6 +11,8 @@ from multical.app.calibrate import Calibrate
 from multical.app.intrinsic import Intrinsic
 from multical.app.vis import Vis
 
+from multical import workspace
+
 import cv2
 
 
@@ -51,8 +53,30 @@ def pre_process():
             cv2.imwrite("cam"+camindex+"\\"+"image"+frameindex+".png", image)
 
 
+def rectify():
+    # load extrinsic and intrinsic parameters from file for two cameras.
+    # rectify image using cv2
+    print("test")
+
+    ws = workspace.Workspace("calibration")
+    print(ws.boards)
+    print(ws.filenames)
+    print(ws)
+    #cams = ws.cameras
+
+    pass
+
 if __name__ == '__main__':
     # import required module
     import os
-    print(os.getcwd())
+
+    #print(os.listdir("./cam0"))
+    #print(os.getcwd())
+
+
+    rectify()
+    #calibrate --cameras cam0 cam1 --boards charuco_small.yaml
+    #vis --workspace_file calibration.pkl
     cli()
+
+    #load extrinsic and intrinsic parameters from

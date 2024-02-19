@@ -1,4 +1,4 @@
-opencv-python
+opencv-python == 4.9.0.80
 opencv-contrib-python
 numpy
 qtpy
@@ -6,3 +6,16 @@ pyqt5
 pyvistaqt
 colour
 qtawesome
+cached-property
+scipy
+pandas
+py_structs < 1.0
+numba
+matplotlib
+simple-parsing
+natsort
+palettable
+numpy-quaternion
+omegaconf
+packaging
+tqdm

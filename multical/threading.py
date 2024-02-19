@@ -2,7 +2,6 @@
 from functools import partial
 from multiprocessing import Pool, cpu_count, get_logger
 from multiprocessing.pool import ThreadPool
-
 from structs.struct import map_list, concat_lists, split_list
 
 from tqdm import tqdm

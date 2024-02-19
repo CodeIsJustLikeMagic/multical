@@ -11,6 +11,8 @@ def has_extension(extensions, filename):
 
 
 def find_image_files(filepath, extensions=image_extensions):
+    print("filepath", filepath)
+    print([filename for filename in natsorted(os.listdir(filepath))])
     return [filename for filename in natsorted(os.listdir(filepath))
                 if has_extension(extensions, path.join(filepath, filename))]
 
