@@ -1,4 +1,4 @@
-opencv-python == 4.9.0.80
+
 opencv-contrib-python
 numpy
 qtpy
@@ -8,7 +8,8 @@ colour
 qtawesome
 cached-property
 scipy
-pandas
+
+
 py_structs < 1.0
 numba
 matplotlib
