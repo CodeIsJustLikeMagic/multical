@@ -8,6 +8,10 @@ from multical.board import load_config, load_calico
 
 
 def find_board_config(image_path, board_file = None):
+  """
+  reads board configuration from yaml file and returns a dicionary of {boardname: BoardObject},
+  where BoardObject is either a mutlical CharucoBoard or AprilBoard object
+  """
   assert board_file is None or path.isfile(board_file), f"board file {board_file} not found"
 
   board_file = board_file or path.join(image_path, "boards.yaml")

@@ -35,6 +35,10 @@ def load_images(filenames, prefix=None, **map_options):
     return parmap_lists(load_image, filenames, **map_options)
 
 def detect_image(image, boards):
+  """
+  performes board detection for the image. Returns a list of results with len(boards)
+  The List contains one dictionary {corners = [], ids = []} per board.
+  """
   return [board.detect(image) for board in boards]
 
 def detect_images(boards, images, **map_options):
