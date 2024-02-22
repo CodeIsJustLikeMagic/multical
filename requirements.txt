@@ -2,7 +2,6 @@
 opencv-contrib-python
 numpy
 qtpy
-pyqt5
 pyvistaqt
 colour
 qtawesome

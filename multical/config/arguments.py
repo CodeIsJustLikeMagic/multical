@@ -23,7 +23,7 @@ class PathOpts:
   cameras: List[str] = field(default_factory=list)#list_field()     # Explicit camera list
 
   limit_images: Optional[int] = 200   # Limit images to enable faster calibration
-
+  calibration_json : str = "calibration.json"
 
 @dataclass 
 class CameraOpts:

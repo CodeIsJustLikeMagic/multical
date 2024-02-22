@@ -150,3 +150,5 @@ cam1/*
 *.json
 /charuco_board_image/*
 calibration.txt
+*.png
+*.jpg
