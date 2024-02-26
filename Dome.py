@@ -61,5 +61,10 @@ if __name__ == '__main__':
     #calibrate --cameras cam0 cam1 --boards charuco_small.yaml
     #vis --workspace_file calibration.pkl
     #rectify
+    #rectify --cameras cam0 cam1 --output_path rectified_images --limit_images 3 --boards charuco_small.yaml
     cli()
+
+    #calibrate --image_path ./captureImages_tricams --cameras cam0 cam1 cam2 --boards charuco_small.yaml
+    #vis --workspace_file ./captureImages_tricams/calibration.pkl
+    #rectify --cameras cam0 cam1 cam2 --output_path rectified_images --limit_images 3 --boards charuco_small.yaml --image_path ./captureImages_tricams
 
