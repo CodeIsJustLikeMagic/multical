@@ -95,6 +95,8 @@ class CharucoBoard(Parameters, Board):
       self.board.getDictionary(), parameters=aruco_config(self.aruco_params))
     if ids is None: return empty_detection
 
+    print(f"found {len(ids)} aruco markers")
+    # skip interpolation step
     _, corners, ids = cv2.aruco.interpolateCornersCharuco(
         corners, ids, image, self.board)
     

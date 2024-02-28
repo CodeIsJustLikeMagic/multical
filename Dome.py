@@ -68,3 +68,6 @@ if __name__ == '__main__':
     #vis --workspace_file ./captureImages_tricams/calibration.pkl
     #rectify --cameras cam0 cam1 cam2 --output_path rectified_images --limit_images 3 --boards charuco_small.yaml --image_path ./captureImages_tricams
 
+
+    #boards --boards ./captureSimulation/charuco_Dome.yaml --detect ./captureSimulation/cam0/image0.png
+    #calibrate --image_path ./captureSimulation --cameras 0 1 2 3 4 --boards ./captureSimulation/charuco_Dome.yaml

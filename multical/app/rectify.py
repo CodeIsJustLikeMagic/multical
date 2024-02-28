@@ -21,9 +21,19 @@ def show_image_stack(windowname, imagelist):
     cv2.imshow(windowname, cv2.hconcat(imagelist))
 
 def rectify(args):
-    print(f"Cameras: {args.paths.cameras}")  # --cameras cam0 cam1 cam3
+    """
+    rectify images of two cameras. Adjusts the images so their epipolarlines align and are horizontal
+    """
+    print(f"Cameras: {args.paths.cameras}")  # --cameras cam0 cam1
+
+    if len(args.paths.cameras != 2):
+        print(f"Please specify two cameras that are to be rectified with --cameras <cam1> <cam2>")
+
     print(f"Reading calibration file {args.paths.calibration_json}")
     cameraParameters = read_calibration_data(os.path.join(args.paths.image_path, args.paths.calibration_json))
+    cameraParametersBase = [param for param in cameraParameters if param.name == args.paths.cameras[0]][0]
+    cameraParametersMatch = [param for param in cameraParameters if param.name == args.paths.cameras[1]][0]
+
     print(f"Found {len(cameraParameters)} CameraParameter entries")
 
     image_path = os.path.expanduser(args.paths.image_path)
@@ -36,23 +46,23 @@ def rectify(args):
         print("Could not find any images :(")
         return
 
-    rectification = Rectification(cameraParameters[1], cameraParameters[2]) # Rectification class for IR camera pair
+    rectification = Rectification(cameraParametersBase, cameraParametersMatch)# Rectification class for camera pair
 
-    for image_inx in range(1):
+    for image_inx in range(1): # for each image index
 
-        image_list = [cv2.imread(os.path.join(image_path, camera_name, image_names[image_inx]), cv2.IMREAD_GRAYSCALE) for camera_name in camera_names]
+        image_pair = [cv2.imread(os.path.join(image_path, camera_name, image_names[image_inx]), cv2.IMREAD_GRAYSCALE) for camera_name in camera_names]
 
-        show_image_stack("input", image_list)
+        show_image_stack("input", image_pair)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
         # rectify IR pairs
-        rectifyBase, rectifyMatch = rectification.apply(image_list[1], image_list[2])
+        rectifyBase, rectifyMatch = rectification.apply(image_pair[1], image_pair[2])
         cv2.imwrite(os.path.join("./", args.paths.output_path, camera_name[1],"image"+image_inx+".png"), rectifyBase)
         cv2.imwrite(os.path.join("./", args.paths.output_path, camera_name[2],"image"+image_inx+".png"), rectifyMatch)
 
-        frameBase = image_list[0]
-        frameMatch = image_list[1]
+        frameBase = image_pair[0]
+        frameMatch = image_pair[1]
         def debug_rectification_images():
             show_image_stack("input", [frameBase, frameMatch])
             undistortBase, undistortMatch = rectification.simple_undistort(frameBase, frameMatch)

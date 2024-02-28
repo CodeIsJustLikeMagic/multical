@@ -76,6 +76,8 @@ class Camera(Parameters):
                 cv2.TERM_CRITERIA_MAX_ITER, max_iter, eps)
     flags = Camera.flags(model, fix_aspect) | flags
 
+    o_points = points.object_points
+    print(len(o_points))
     err, K, dist, _, _ = cv2.calibrateCamera(points.object_points,
             points.corners, image_size, None, None, criteria=criteria, flags=flags)
 
