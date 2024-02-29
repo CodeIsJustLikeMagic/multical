@@ -76,7 +76,7 @@ The outputs from `multical calibrate` are written to the `--output_path` which b
 
 ### Calibration targets
 
-Calibration targets supported are currently, charuco boards and aprilgrid boards (as used by Kalibr). Targets are configured by a configuration file with `--board` and examples can be found in the source tree: [example_boards](https://github.com/saulzar/multical/tree/master/example_boards). 
+Calibration targets supported are currently, charuco boards and aprilgrid boards (as used by Kalibr). Targets are configured by a configuration file with `--board` and examples can be found in the source tree: [example_boards](https://github.com/saulzar/multical/tree/master/example_boards). When using multipe charuco boards with a common aruco dictionary, make sure the aruco_offset per board instance is at least the amount of aruco markers that each board shows. This way each board displays a unique set of aruco markers with no overlap. This is importat for board detection when more than one board is see in one image.
 
 It is a good idea to check your expectation against the configuration specified using an image before calibration `multical boards --boards my_board.yaml --detect my_image.jpeg`, 
 

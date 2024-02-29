@@ -92,7 +92,7 @@ def add_marker(scene, corner, id, options, pen, color, font):
 
 def add_point_markers(scene, points, board, color, options):
     marker_font = QFont()
-    marker_font.setPixelSize(options.marker_size * 0.75)
+    marker_font.setPixelSize(int(options.marker_size * 0.75))
 
     pen = cosmetic_pen(color, options.line_width)
     corners = points.points[points.valid]
