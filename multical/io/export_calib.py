@@ -18,17 +18,25 @@ def export_cameras(camera_names, cameras):
     return {k : export_camera(camera) for k, camera in zip(camera_names, cameras)}
 
 def export_transform(pose):
+    '''
+    splits an extrinsicmatrix (position) into Rotationmatrix and Translationvector
+
+    '''
     r, t = matrix.split(pose)
     return struct (R = r.tolist(), T=t.tolist())
 
 
 def export_camera_poses(camera_names, camera_poses):
+  '''compiles a dictionary of camera poses (RotationMatrix and TranslationVector)'''
   return {k : export_transform(pose) 
     for k, pose, valid in zip(camera_names, camera_poses.poses, camera_poses.valid) 
       if valid}
 
 
 def export_relative(camera_names, camera_poses, master):
+  '''
+  compiles a dictionary of camera poses (RotationMatrix and TranslationVector) where poses are relative to a master camera
+  '''
   assert master in camera_names
 
   return {k if master == k else f"{k}_to_{master}" : export_transform(pose) 

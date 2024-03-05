@@ -54,18 +54,3 @@ def read_calibration_data(calibration_json_path):
                                 np.array(poses[pose]["T"]), np.array(cameras_j[camera]['image_size']))
                for camera, pose in zip(cameras_j.keys(), poses.keys())]
     return cameras
-
-
-def read_from_workspace():
-    from multical.workspace import Workspace
-    from structs.struct import struct, split_dict
-    import pathlib
-    import os
-
-    ws = Workspace.load(os.path.join(os.getcwd(), "calibration.pkl"))
-
-    _, calibs = split_dict(ws.calibrations)
-    calibration = calibs[0]
-    poses = calibration.camera_poses.pose_table
-    print(poses)
-    print("Cam0 intrinsic matrix: ", calibration.cameras[0].intrinsic)

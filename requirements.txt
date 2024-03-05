@@ -10,7 +10,7 @@ scipy
 
 
 py_structs < 1.0
-numbap
+numpy
 matplotlib
 simple-parsing
 natsort
