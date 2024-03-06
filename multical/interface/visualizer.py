@@ -138,7 +138,7 @@ class Visualizer(QtWidgets.QMainWindow):
       self.params_viewer.set_cameras(self.calibration.cameras, tables.inverse(
           self.calibration.camera_poses.pose_table))
 
-      self.viewer_3d.enable(False)
+      self.viewer_3d.enable(False) # viewer_3d handles the 3d view tab
 
       if self.controllers is None:
         self.controllers = struct(

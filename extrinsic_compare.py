@@ -34,13 +34,13 @@ def read_from_workspace(path):
 
     camera_poses_2 = tables.inverse(calibration.pose_estimates.camera)
 
-    with open("captureSimulation\calibration_.json", "w") as f:
+    with open("./captureSimulation/calibration_.json", "w") as f:
         json.dump({"meta": "camera and board poses relative to camera 0",
                    "cameras": camera_view_matrix_json,
                    "boards": board_poses_json}, f)
 
 
-calibrationDataPath = "captureSimulation\calibration.pkl"
+calibrationDataPath = "./captureSimulation/calibration.pkl"
 read_from_workspace(calibrationDataPath)
 
 

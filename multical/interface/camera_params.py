@@ -10,10 +10,13 @@ from .layout import h_layout, h_stretch, v_stretch, v_layout, widget
 
 
 def set_master(poses, index):
-  inv = np.linalg.inv(poses.poses[index])
-  return poses._extend(poses = poses.poses @ np.expand_dims(inv, 0))
+  inv = np.linalg.inv(poses.poses[index]) # inverted matrix of master camera, master camera indicated as index
+  return poses._extend(poses = poses.poses @ np.expand_dims(inv, 0)) # matrix multiplication with interted master camera
 
 class ParamsViewer(QtWidgets.QScrollArea):
+  '''
+  Interface sub-window that displays cameras intrinsic and extrinsic information
+  '''
   def __init__(self, parent):
     super().__init__(parent)
 
@@ -42,6 +45,9 @@ class ParamsViewer(QtWidgets.QScrollArea):
     self.master_combo.currentIndexChanged.connect(self.update_cameras)
 
   def set_cameras(self, cameras, camera_poses):
+    '''
+    Sets intrinsic and exrinsic (camera_poses) information for a cameras
+    '''
     assert self.camera_names is not None
 
     self.cameras = cameras
@@ -51,18 +57,19 @@ class ParamsViewer(QtWidgets.QScrollArea):
 
   def update_cameras(self):
     master = self.master_combo.currentIndex()
-    poses = set_master(self.camera_poses, master)
+    poses = set_master(self.camera_poses, master) # converts camera_pose to change the master camera, master is indicated as index
 
     for camera_widget, camera, camera_pose in\
        zip(self.camera_widgets, self.cameras, poses.poses):
-      camera_widget.set_camera(camera)
-      camera_widget.set_pose(camera_pose)
+      camera_widget.set_camera(camera) # displays camera.intrinsic and camera.dist
+      camera_widget.set_pose(camera_pose) # displays camera_pose, no data conversion
 
     self.setDisabled(False)
 
     
 
 class CameraParams(QtWidgets.QWidget):
+  '''Displays values in QtWindget. No more conversions of data here (only rounding)'''
   def __init__(self, camera_name, parent=None):
     super(CameraParams, self).__init__(parent)
 

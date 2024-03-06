@@ -20,7 +20,6 @@ def export_cameras(camera_names, cameras):
 def export_transform(pose):
     '''
     splits an extrinsicmatrix (position) into Rotationmatrix and Translationvector
-
     '''
     r, t = matrix.split(pose)
     return struct (R = r.tolist(), T=t.tolist())
@@ -50,7 +49,7 @@ def export_sequential(camera_names, camera_poses):
 
   for i in range(1, len(camera_names)):
     k = f"{camera_names[i]}_to_{camera_names[i - 1]}"
-    transforms[k] = export_transform(poses[i] @ np.linalg.inv(poses[i - 1]))
+    transforms[k] = export_transform(poses[i] @ np.linalg.inv(poses[i - 1]))# transforms pose acording to previous cameras position
     
   return transforms
 
