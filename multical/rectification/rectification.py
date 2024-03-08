@@ -54,3 +54,32 @@ def read_calibration_data(calibration_json_path):
                                 np.array(poses[pose]["T"]), np.array(cameras_j[camera]['image_size']))
                for camera, pose in zip(cameras_j.keys(), poses.keys())]
     return cameras
+
+
+def read_calibration_data_domejson(calibration_json_path):
+    from multical.transform import matrix
+    with open(calibration_json_path) as f:
+        data = json.load(f)
+
+    cameras = [CameraParameters(camera["camera_id"], # name
+                                np.array(camera["intrinsics"]["camera_matrix"]).reshape(3,3), # intrinsic matrix
+                                np.array(camera["intrinsics"]["distortion_coefficients"]), # distortion coeffs
+                                matrix.split(np.array(camera["extrinsics"]["view_matrix"]).reshape(4, 4))[0], # rotation matrix
+                                matrix.split(np.array(camera["extrinsics"]["view_matrix"]).reshape(4, 4))[1], # translation vector
+                                np.array(camera["intrinsics"]["resolution"])) # resolution
+               for camera in data["cameras"]]
+    return cameras
+
+def read_calibration_data_pkl(calibration_pkl_path):
+    from multical.workspace import Workspace
+    from structs.struct import split_dict
+    import numpy as np
+    ws = Workspace.load(calibration_pkl_path)
+    _, calibs = split_dict(ws.calibrations)
+    calibration = calibs[1]
+    cameras = calibration.cameras
+
+    poses = calibration.camera_poses.pose_table
+    inv = np.linalg.inv(poses.poses[0])
+    camera_extrinsics = poses._extend(poses = poses.poses @ np.expand_dims(inv,0))
+

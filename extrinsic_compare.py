@@ -49,7 +49,7 @@ def read_from_workspace(path):
     print("board mesh set position", board_mesh_set().poses[3])
 
     names = calibration.camera_poses.names
-    camera_poses = camera_parameter_view_cam_params()#calibration.camera_poses
+    camera_poses = calibrationJson_cam_prams()#calibration.camera_poses
 
     valid_camera_poses = {name: extrinsic for name,extrinsic, valid in zip(names, camera_poses.poses, camera_poses.valid)}
     camera_view_matrix_json = [{"camera_id": name,
@@ -74,7 +74,7 @@ def read_from_workspace(path):
     with open("./captureSimulation/calibration_.json", "w") as f:
         json.dump({"meta": "camera and board poses relative to camera 0",
                    "cameras": camera_view_matrix_json,
-                   "boards": board_poses_json}, f)
+                   "boards": board_poses_json}, f, indent=2)
 
 
 calibrationDataPath = "./captureSimulation/calibration.pkl"

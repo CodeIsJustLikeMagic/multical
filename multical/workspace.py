@@ -12,7 +12,7 @@ from multical.optimization.pose_set import PoseSet
 from multical import config
 
 from os import path
-from multical.io import export_json, try_load_detections, write_detections
+from multical.io import export_json, try_load_detections, write_detections, export_json_domeformat
 from multical.image.detect import common_image_size
 
 from multical.optimization.calibration import Calibration, select_threshold
@@ -285,6 +285,18 @@ class Workspace:
 
         return export_json(calib, self.names, self.filenames, master=master)
 
+    def export_json_dome(self, master=None):
+        master = master or self.names.camera[0]
+        assert (
+            master is None or master in self.names.camera
+        ), f"master f{master} not found in cameras f{str(self.names.camera)}"
+
+        calib = self.latest_calibration
+        if master is not None:
+            calib = calib.with_master(master)
+
+        return export_json_domeformat(calib, self.names, self.filenames, master=master)
+
 
     def export(self, filename=None, master=None):
       filename = filename or path.join(self.output_path, f"{self.name}.json")
@@ -293,6 +305,13 @@ class Workspace:
       data = self.export_json(master=master)
       with open(filename, 'w') as outfile:
         json.dump(to_dicts(data), outfile, indent=2)
+
+      # second json export (compiled according to our Dome convention)
+      data_dome = self.export_json_dome(master=master)
+      filename = filename.split(".json")[0] + "_dome.json"
+      info(f"Exporting calibration to {filename}")
+      with open(filename, 'w') as outfile:
+          json.dump(data_dome, outfile, indent=2)
         
     def dump(self, filename=None):
         filename = filename or path.join(self.output_path, f"{self.name}.pkl")
