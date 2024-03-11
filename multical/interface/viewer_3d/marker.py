@@ -187,7 +187,7 @@ class CameraSet():
     for marker in self.instances: 
       marker.show(shown)
 
-class BoardSet():
+class BoardSet(): #draws meshes for one board
   def __init__(self, viewer, board_poses, board_meshes, board_colors):
 
     def instance(mesh, pose, color):
