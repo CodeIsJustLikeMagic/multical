@@ -51,7 +51,7 @@ def read_from_workspace(path):
     names = calibration.camera_poses.names
     camera_poses = calibrationJson_cam_prams()#calibration.camera_poses
 
-    valid_camera_poses = {name: extrinsic for name,extrinsic, valid in zip(names, camera_poses.poses, camera_poses.valid)}
+    valid_camera_poses = {name: extrinsic for name, extrinsic, valid in zip(names, camera_poses.poses, camera_poses.valid)}
     camera_view_matrix_json = [{"camera_id": name,
                                 "extrinsics": {"view_matrix": valid_camera_poses[name].flatten().tolist()},
                                 "intrinsics": {"camera_matrix": camera.intrinsic.flatten().tolist(),
@@ -71,13 +71,13 @@ def read_from_workspace(path):
 
     camera_poses_2 = tables.inverse(calibration.pose_estimates.camera)
 
-    with open("./captureSimulation/calibration_.json", "w") as f:
+    with open("./captureSimulation2/calibration_.json", "w") as f:
         json.dump({"meta": "camera and board poses relative to camera 0",
                    "cameras": camera_view_matrix_json,
                    "boards": board_poses_json}, f, indent=2)
 
 
-calibrationDataPath = "./captureSimulation/calibration.pkl"
+calibrationDataPath = "./captureSimulation2/calibration.pkl"
 read_from_workspace(calibrationDataPath)
 
 
