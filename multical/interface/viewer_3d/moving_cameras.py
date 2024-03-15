@@ -11,7 +11,6 @@ class MovingCameras(object):
     self.viewer = viewer
     self.view_poses = tables.inverse(tables.expand_views(calib.pose_estimates))
     self.meshes = SceneMeshes(calib)
-
     self.board_set = BoardSet(self.viewer, calib.pose_estimates.board, self.meshes.board, board_colors)
     self.camera_sets = [CameraSet(self.viewer, poses, self.meshes.camera)
         for poses in self.view_poses._sequence(1)]

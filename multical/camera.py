@@ -79,8 +79,9 @@ class Camera(Parameters):
 
     points.object_points = [np.array(object_points, dtype=np.float32) for object_points in points.object_points]
     points.corners = [np.array(image_points, dtype=np.float32) for image_points in points.corners]
-    o_points = points.object_points
-    print(len(o_points))
+    # sometimes throws "Assertion Failed ( fabs(sc) > DBL_EPSILON ) using aruco::calibrateCameraCharuco"
+    # why? this is caused when to few corners were found for a camera
+    # how to fix: In the board yaml file increase the number for 'min_points'
     err, K, dist, _, _ = cv2.calibrateCamera(points.object_points,
               points.corners, image_size, None, None, criteria=criteria, flags=flags)
     return Camera(intrinsic=K, dist=dist, image_size=image_size,
