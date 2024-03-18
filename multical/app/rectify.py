@@ -20,19 +20,7 @@ def show_image_stack(windowname, imagelist):
     cv2.resizeWindow(windowname, 2000, 1000)
     cv2.imshow(windowname, cv2.hconcat(imagelist))
 
-
-def rectify(args):
-    """
-    rectify images of two cameras. Adjusts the images so their epipolarlines align and are horizontal
-    """
-
-    debug = False
-    print(f"Cameras: {args.paths.cameras}")  # --cameras cam0 cam1
-
-    if len(args.paths.cameras) != 2:
-        print(f"Please specify two cameras that are to be rectified with --cameras <cam1> <cam2>")
-        return
-
+def createOutputFileSystem(args):
     if args.paths.output_path == args.paths.image_path or args.paths.output_path is None:
         args.paths.output_path = args.paths.image_path + "_rectified"
     if not os.path.exists(args.paths.output_path):
@@ -41,12 +29,34 @@ def rectify(args):
         cam_path = os.path.join(args.paths.output_path, c)
         if not os.path.exists(cam_path):
             os.makedirs(cam_path)
+def rectify(args):
+    """
+    rectify images of two cameras. Adjusts the images so their epipolarlines align and are horizontal
+    """
+
+    debug = False
+    print(f"Rectify for cameras: {args.paths.cameras}")  # --cameras cam0 cam1
+
+    if len(args.paths.cameras) != 2:
+        print(f"Please specify two cameras that are to be rectified with --cameras <cam1> <cam2>")
+        return
 
     print(f"Reading calibration file {args.paths.calibration_json}")
     cameraParameters = read_calibration_data_domejson(args.paths.calibration_json)
     print(f"Found {len(cameraParameters)} CameraParameter entries")
-    cameraParametersBase = [param for param in cameraParameters if param.name == args.paths.cameras[0]][0]
-    cameraParametersMatch = [param for param in cameraParameters if param.name == args.paths.cameras[1]][0]
+    cameraParametersBase = [param for param in cameraParameters if param.name == args.paths.cameras[0]]
+    cameraParametersMatch = [param for param in cameraParameters if param.name == args.paths.cameras[1]]
+    if len(cameraParametersBase) == 0:
+        print(f"Error, could not find camera with name '{args.paths.cameras[0]}' in calibration_dome file. "
+              f"Available camera names are:{[param.name for param in cameraParameters]}")
+        return
+    if len(cameraParametersMatch) == 0:
+        print(f"Error, could not find camera with name '{args.paths.cameras[1]}' in calibration_dome file. "
+              f"Available camera names are:{[param.name for param in cameraParameters]}")
+        return
+
+    cameraParametersBase = cameraParametersBase[0]# select first camera that matches the name
+    cameraParametersMatch = cameraParametersMatch[0]# select first camera that matches the name
 
     image_path = os.path.expanduser(args.paths.image_path)
     print(f"Finding images in {image_path}")
@@ -60,12 +70,15 @@ def rectify(args):
 
     rectification = Rectification(cameraParametersBase, cameraParametersMatch)  # Rectification class for camera pair
 
+    createOutputFileSystem(args)  # only create output filesystem once we are sure that there are no obvious error
+
     for image_inx in range(len(image_names)):  # for each image index
-        print("image pair", image_inx)
+        print(f"image pair {image_inx}/{len(image_names)-1}")
         image_pair = [cv2.imread(os.path.join(image_path, camera_name, image_names[image_inx]), cv2.IMREAD_GRAYSCALE)
                       for camera_name in camera_names]
 
-        # rectify IR pairs
+        # rectify image pairs
+        # todo multical uses a pool to speed up image processing, we can probably use the same to speed this up
         rectifyBase, rectifyMatch = rectification.apply(image_pair[0], image_pair[1])
         cv2.imwrite(os.path.join(args.paths.output_path, camera_names[0], "image" + str(image_inx) + ".png"),
                     rectifyBase)
