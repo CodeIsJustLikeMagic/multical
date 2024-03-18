@@ -356,7 +356,7 @@ def initialise_poses(pose_table, camera_poses=None):
     )
     
   board  = estimate_relative_poses_inv(pose_table, axis=2)
-
+  # todo export some of these board poses and see what they do. board_relative could be corret. It looks lie board but inverted I think
   # solve for the rig transforms cam @ rig @ board = pose
   # first take inverse of both sides by board pose  
   # cam @ rig = board_relative = pose @ board^-1

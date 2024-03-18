@@ -207,13 +207,36 @@ class Workspace:
             ParamList(self.cameras, self.names.camera),
             ParamList(self.boards, self.names.board),
             self.point_table,
-            PoseSet(pose_init.camera, self.names.camera),
-            PoseSet(pose_init.board, self.names.board),
+            PoseSet(pose_init.camera, self.names.camera), # camera poses look similar to json export(opencv format)
+            PoseSet(pose_init.board, self.names.board), # t
             motion_model.init(pose_init.times, self.names.image),
-        )
+
+        )# create a Calibration Datastructure to save the data
 
         # calib = calib.reject_outliers_quantile(0.75, 5)
         calib.report(f"Initialisation")
+
+        #export initialization camera poses and board poses
+        board_poses_json = [{"board_name": name, "extrinsics": {"view_matrix": extrinsicMatrix.flatten().tolist()}}
+                            for name, extrinsicMatrix, valid
+                            in zip(calib.board_poses.names, calib.board_poses.pose_table.poses, calib.board_poses.pose_table.valid)
+                            if valid]
+
+        camera_poses = {name: extrinsic for name, extrinsic in
+                              zip(calib.camera_poses.names, calib.camera_poses.pose_table.poses)}
+        print("camera poses", camera_poses, "camera poses end")
+        camera_view_matrix_json = [{"camera_id": name,
+                                    "extrinsics": {"view_matrix": camera_poses[name].flatten().tolist()},
+                                    "intrinsics": {"camera_matrix": 0,
+                                                   "resolution": 0,
+                                                   "distortion_coefficients": 0}}
+                                   for name, valid
+                                   in zip(calib.camera_poses.names,calib.camera_poses.pose_table.valid)]
+
+        with open("./captureSimulation2/calibration_InitilizationExport.json", "w") as f:
+            json.dump({"meta": "camera and board poses relative to camera 0",
+                       "cameras": camera_view_matrix_json,
+                       "boards": board_poses_json}, f, indent=2)
 
         self.calibrations["initialisation"] = calib
         return calib
@@ -237,6 +260,9 @@ class Workspace:
         )
 
         self.calibrations[name] = calib
+
+        #todo: export camera and board poses
+
         return calib
 
     @property
