@@ -107,6 +107,9 @@ class CharucoBoard(Parameters, Board):
       min_points=self.min_points, min_rows=self.min_rows)
 
   def estimate_pose_points(self, camera, detections):
+    """
+    estimates rvec and tvec of board based on detected image points and camera intrinsics
+    """
     return estimate_pose_points(self, camera, detections)
 
 

@@ -146,7 +146,7 @@ class Workspace:
         self.detected_points = detect_boards_cached(self.boards, self.images, 
           self.detections_file, cache_key, load_cache, j=j)
 
-        self.point_table = tables.make_point_table(self.detected_points, self.boards)
+        self.point_table = tables.make_point_table(self.detected_points, self.boards)# detects image points and saves them in workpace.point_table
         info("Detected point counts:")
         tables.table_info(self.point_table.valid, self.names)
 
@@ -170,8 +170,8 @@ class Workspace:
         info("Calibrating single cameras..")
         if not isFisheye:
             self.cameras, errs = calibrate_cameras(
-                self.boards,
-                self.detected_points,
+                self.boards,#info for each board (aruco_dict, size, marker length, square length etc as definded in board.yaml)
+                self.detected_points,# corners and ids detected by each camera
                 self.image_size,
                 model=camera_model,
                 fix_aspect=fix_aspect,
@@ -194,6 +194,7 @@ class Workspace:
 
     def initialise_poses(self, motion_model=StaticFrames, camera_poses=None, isFisheye=False):
         assert self.cameras is not None, "initialise_poses: no cameras set, first use calibrate_single or set_cameras"
+        # for each camera, for each image, for each board, board position relative to camera (computed from rvec,tvec)
         self.pose_table = tables.make_pose_table(self.point_table, self.boards, self.cameras)
 
         info("Pose counts:")
