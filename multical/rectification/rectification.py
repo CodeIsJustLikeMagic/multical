@@ -56,7 +56,7 @@ def read_calibration_data(calibration_json_path):
     return cameras
 
 
-def read_calibration_data_domejson(calibration_json_path):
+def read_calibration_data_domejson(calibration_json_path): #expects dome formated json file
     from multical.transform import matrix
     with open(calibration_json_path) as f:
         data = json.load(f)

@@ -74,20 +74,29 @@ def image_projection(camera, distance=1):
 
 def scaled(pose, scale):
   return pose @ np.diag([scale, scale, scale, 1.0]) 
-
+import vtk
 class Marker():
   def __init__(self, viewer, mesh, pose, options, scale=1):
     self.actor = viewer.add_mesh(pv.PolyData(mesh), **options)
     self.showing = True
     self.set_transform(pose, scale)
 
+    self.modeltoworldmatrix = vtk.vtkMatrix4x4()
+    self.actor.GetModelToWorldMatrix(self.modeltoworldmatrix)
+    self.origin = self.actor.GetOrigin()
+
+
+
+
   def set_transform(self, pose, scale=1):
     self.pose = pose
     self.scale = scale
 
-    transform = scaled(self.pose.poses, self.scale)
-    self.actor.SetUserTransform(vtk_transform(transform))
+    self.transform_scaled = scaled(self.pose.poses, self.scale)
+    self.actor.SetUserTransform(vtk_transform(self.transform_scaled))
     self.actor.SetVisibility(self.pose.valid and self.showing)
+    self.transform_vtk = str(vtk_transform(self.transform_scaled))
+
 
   def set_color(self, color, opacity=1):
     p = self.actor.GetProperty()
@@ -188,12 +197,13 @@ class CameraSet():
       marker.show(shown)
 
 class BoardSet(): #draws meshes for one board
-  def __init__(self, viewer, board_poses, board_meshes, board_colors):
+  def \
+          __init__(self, viewer, board_poses, board_meshes, board_colors):
 
     def instance(mesh, pose, color):
       options = dict(style="wireframe", color=color, show_edges=True)
       return Marker(viewer, mesh, pose, options)
-
+    print("Board Setting")
     self.board_colors = board_colors
     self.instances = [instance(mesh, pose, color)
         for mesh, color, pose in zip(board_meshes, board_colors, board_poses._sequence())]
@@ -203,6 +213,7 @@ class BoardSet(): #draws meshes for one board
   def update_poses(self, board_poses):
     for instance, pose in zip(self.instances, board_poses._sequence()):
       instance.set_transform(pose=pose)
+
       
 
   def update(self, active):

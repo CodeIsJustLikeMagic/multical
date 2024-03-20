@@ -123,6 +123,7 @@ def export_json_domeformat(calib, names, filenames, master=None):
                                for name, camera
                                in zip(names.camera, calib.cameras)]
 
+
     master_info = "" if master is None else "Camera poses relative to camera " + master + "."
 
     return {"meta": master_info + "Extrinsics use OpenCV coordinate system (left-hand, x left, z forward, y down)",
