@@ -378,42 +378,11 @@ def initialise_poses(pose_table, camera_poses=None):# pose_table for each camera
     # cam @ rig = board_relative = pose @ board^-1
     board_relative = multiply_tables(pose_table, expand(inverse(board), [0, 1]))
 
-    exportcameraandboards(None, camera, None,
-                          struct(poses=board_relative.poses[0][0], valid=board_relative.valid[0][0]), "board_relative")
-    exportcameraandboards(None, camera, None, board, "board")
     # solve for unknown rig
     expanded = broadcast_to(expand(camera, [1, 2]), board_relative)
     times = relative_between_n(expanded, board_relative, axis=1, inv=True)
 
     return struct(times=times, camera=camera, board=board)
-
-
-def exportcameraandboards(camnames, camera_poses, boardnames, board_poses, filename=""):
-    import json
-    if camnames is None:
-        camnames = [str(indx) for indx in range(len(camera_poses.poses))]
-    if boardnames is None:
-        boardnames = [str(indx) for indx in range(len(board_poses.poses))]
-    valid_camera_poses = {name: extrinsic for name, extrinsic in
-                          zip(camnames, camera_poses.poses)}
-
-    camera_view_matrix_json = [{"camera_id": name,
-                                "extrinsics": {"view_matrix": valid_camera_poses[name].flatten().tolist()},
-                                "intrinsics": {"camera_matrix": 0,
-                                               "resolution": 0,
-                                               "distortion_coefficients": 0}}
-                               for name, camera
-                               in zip(camnames, valid_camera_poses)]
-
-    board_poses_json = [{"board_name": name, "extrinsics": {"view_matrix": extrinsicMatrix.flatten().tolist()}}
-                        for name, extrinsicMatrix, valid
-                        in zip(boardnames, board_poses.poses, board_poses.valid)
-                        if valid]
-
-    with open("./captureSimulation2/calibration_" + filename + ".json", "w") as f:
-        json.dump({"meta": "camera and board poses relative to camera 0",
-                   "cameras": camera_view_matrix_json,
-                   "boards": board_poses_json}, f, indent=2)
 
 
 def stereo_calibrate(points, board, cameras, i, j, **kwargs):
