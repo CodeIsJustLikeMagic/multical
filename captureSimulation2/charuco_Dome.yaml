@@ -6,7 +6,7 @@ common:
   marker_length: 0.065
 
   min_rows: 3
-  min_points: 12
+  min_points: 15
 
 boards:
   charuco_small_0:

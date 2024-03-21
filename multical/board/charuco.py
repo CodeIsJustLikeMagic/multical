@@ -90,19 +90,14 @@ class CharucoBoard(Parameters, Board):
       return self.__str__()      
 
 
-  def detect(self, image):    
-    corners, ids, _ = cv2.aruco.detectMarkers(image, 
-      self.board.getDictionary(), parameters=aruco_config(self.aruco_params))
+  def detect(self, image):
+    detector = cv2.aruco.CharucoDetector(self.board)
+    corners, ids, marker_corners, marker_ids = detector.detectBoard(image)
     if ids is None: return empty_detection
 
     # make sure all boards have unique aruco markers. If you are printing the boards with --boards
     # set aruco_offset to at least the number of aruco markers per board
     #print(f"found {len(ids)} aruco markers")
-    _, corners, ids = cv2.aruco.interpolateCornersCharuco(
-        corners, ids, image, self.board)
-    #if corners is None:
-    #  print("interpolated 0 corers")
-    #else: print(f"interpolated {len(corners)} corners")
     
     if ids is None: return empty_detection
     return struct(corners = corners.squeeze(1), ids = ids.squeeze(1))
@@ -112,6 +107,9 @@ class CharucoBoard(Parameters, Board):
       min_points=self.min_points, min_rows=self.min_rows)
 
   def estimate_pose_points(self, camera, detections):
+    """
+    estimates rvec and tvec of board based on detected image points and camera intrinsics
+    """
     return estimate_pose_points(self, camera, detections)
 
 
@@ -133,6 +131,6 @@ class CharucoBoard(Parameters, Board):
       'aruco_dict', 'aruco_offset'
     ])
 
-
-
-
+  def image(id, catid, img1, img2, alt):
+    ret = '<p class="storyintro"><a href="index.php?option=com_content&amp;view=article&amp;id='+id+';catid=' + catid + '"><img src="' + img1 + '" alt="' + alt + '" width="299" height="300" class="desktop" style="margin-right: 10px; float: left;" onmouseover="this.src=\'' + img2 + '\';" onmouseout="this.src=\'' + img1 + '\';" /></a></p>' + '<label class="storyintro phone"> <input type="checkbox" class="image-toggler" /> <img src="' + img1 + '" alt="' + alt + '" class="storyimagephone1" /> <img src="' + img2 + '" alt="' + alt2 + '" class="storyimagephone2" loading="lazy" /> </label>'
+    print(ret)
