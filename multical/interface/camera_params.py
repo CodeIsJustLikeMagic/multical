@@ -56,7 +56,7 @@ class ParamsViewer(QtWidgets.QScrollArea):
     self.update_cameras()
 
   def update_cameras(self):
-    master = self.master_combo.currentIndex()
+    master = self.master_combo.currentIndex() # index of newly selected master camera
     poses = set_master(self.camera_poses, master) # converts camera_pose to change the master camera, master is indicated as index
 
     for camera_widget, camera, camera_pose in\

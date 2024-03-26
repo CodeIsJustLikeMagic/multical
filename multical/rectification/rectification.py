@@ -70,16 +70,36 @@ def read_calibration_data_domejson(calibration_json_path): #expects dome formate
                for camera in data["cameras"]]
     return cameras
 
-def read_calibration_data_pkl(calibration_pkl_path):
+def read_calibration_data_pkl(calibration_pkl_path, mastercameraname: str):
     from multical.workspace import Workspace
     from structs.struct import split_dict
     import numpy as np
     ws = Workspace.load(calibration_pkl_path)
     _, calibs = split_dict(ws.calibrations)
-    calibration = calibs[1]
-    cameras = calibration.cameras
+    calib = calibs[1]
+    calib = calib.with_master(mastercameraname) # transforms extrinsics so mastercamera is origin
+    camera_params= calib.cameras
+    camera_names = camera_params.names
 
-    poses = calibration.camera_poses.pose_table
-    inv = np.linalg.inv(poses.poses[0])
-    camera_extrinsics = poses._extend(poses = poses.poses @ np.expand_dims(inv,0))
+    camera_poses = calib.camera_poses.pose_table
+    #inv = np.linalg.inv(poses.poses[0]) # is already transformed around master camera
+    #camera_extrinsics = poses._extend(poses = poses.poses @ np.expand_dims(inv,0))
+
+
+
+    camera_poses = calib.camera_poses.pose_table  # calibration.camera_poses
+    valid_camera_poses = {name: extrinsic for name, extrinsic, valid in
+                          zip(camera_names, camera_poses.poses, camera_poses.valid)}
+
+    cameras = [CameraParameters(name, # name
+                                camera.intrinsic, # intrinsic matrix
+                                camera.dist), # distortion coeffs
+                                matrix.split(valid_camera_poses[name])[0], # rotation matrix
+                                matrix.split(valid_camera_poses[name])[1], # translation vector
+                                camera.image_size) # resolution
+               for name, camera, extrinsics in zip(camera_names, camera_params, valid_camera_poses)]
+    return cameras
+
+
+
 

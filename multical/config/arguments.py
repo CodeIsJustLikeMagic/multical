@@ -24,7 +24,7 @@ class PathOpts:
 
   limit_images: Optional[int] = 200   # Limit images to enable faster calibration
   calibration_json : str = "calibration.json"
-  debug : int = 0 # debug level, 0 is no debug, 1 is surface level debug, 2 is detailed debug
+
 
 @dataclass 
 class CameraOpts:

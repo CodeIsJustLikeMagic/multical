@@ -267,8 +267,9 @@ def CalculateYDifferenceForPointMatches(pts1, pts2, verbos = True):
     assert len(pts1) == len(pts2)
     diff_per_point_pair = np.array([abs(pt1[1] - pt2[1]) for pt1, pt2 in zip(pts1, pts2)])
     avg = np.average(diff_per_point_pair)
+    std = np.std(diff_per_point_pair)
     if verbos:
-        print(f"Average Difference in y direction: {avg} pixels")
+        print(f"Average Difference in y direction: {avg} pixels, std {std}")
     return avg
 
 

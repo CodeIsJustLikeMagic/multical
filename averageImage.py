@@ -26,7 +26,8 @@ def average_images(input_folder):
     sum_image = np.zeros((height, width, channels), dtype=np.float32)
 
     # Loop through each image and add it to the sum
-    for image_file in image_files:
+    for indx, image_file in enumerate(image_files):
+        print(f"{indx}/{len(image_files)}")
         image_path = os.path.join(input_folder, image_file)
         image = cv2.imread(image_path).astype(np.float32)
         sum_image += image
@@ -35,15 +36,17 @@ def average_images(input_folder):
     num_images = len(image_files)
     average_image = (sum_image / num_images).astype(np.uint8)
 
+    # Save the average image
+    output_path = os.path.join(input_folder, 'average_image.jpg')
+    cv2.imwrite(output_path, average_image)
+    print(f"Average image saved at: {output_path}")
+
     # Display or save the average image
     cv2.imshow('Average Image', average_image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    # Save the average image
-    output_path = os.path.join(input_folder, 'average_image.jpg')
-    cv2.imwrite(output_path, average_image)
-    print(f"Average image saved at: {output_path}")
+
 
 
 if __name__ == "__main__":
