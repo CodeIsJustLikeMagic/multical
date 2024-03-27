@@ -42,7 +42,7 @@ def rectify(
     rectify images of two cameras. Adjusts the images so their epipolarlines align and are horizontal
     """
 
-    print(f"Rectify for cameras: {args.paths.cameras}")  # --cameras cam0 cam1
+    print(f"Rectify for cameras: {args.paths.cameras}\n")  # --cameras cam0 cam1
 
     if len(args.paths.cameras) != 2:
         print(f"Please specify two cameras that are to be rectified with --cameras <cam1> <cam2>")
@@ -53,8 +53,8 @@ def rectify(
         if path.isdir(filename):
             filename = path.join(filename, "calibration.pkl")
             print(f"Reading calibration file {filename}")
-            cameraParameters = read_calibration_data_pkl(filename, args.paths.cameras[
-                0])  # read calibration data, with base camera as master (aka as origin of coordiante system for extrinsics)
+            cameraParameters = read_calibration_data_pkl(filename, args.paths.cameras[0])
+            # read calibration data, with base camera as master (aka as origin of coordiante system for extrinsics)
     else:
         print(f"Reading calibration file {args.paths.calibration_json}")
         cameraParameters = read_calibration_data_domejson(args.paths.calibration_json)
@@ -62,6 +62,8 @@ def rectify(
     print(f"Found {len(cameraParameters)} CameraParameter entries")
     cameraParametersBase = [param for param in cameraParameters if param.name == args.paths.cameras[0]]
     cameraParametersMatch = [param for param in cameraParameters if param.name == args.paths.cameras[1]]
+
+
 
     # the cameras extrinsics should be transformed so that cameraBase is the origin of our coordinate system.
     # if we don't do this, the rectification is incorrect (returns large vertical feature errors)
@@ -74,9 +76,13 @@ def rectify(
         print(f"Error, could not find camera with name '{args.paths.cameras[1]}' in calibration_dome file. "
               f"Available camera names are:{[param.name for param in cameraParameters]}")
         return
-
     cameraParametersBase = cameraParametersBase[0]  # select first camera that matches the name
     cameraParametersMatch = cameraParametersMatch[0]  # select first camera that matches the name
+
+    np.set_printoptions(suppress=True, precision=4)
+    print(f"Base {cameraParametersBase}")
+    print(f"Match {cameraParametersMatch}")
+    print("Extrinsic Paramaters (R-rotationmatrix and T-translationvector) are transformed so Base Camera is origin\n")
 
     image_path = os.path.expanduser(args.paths.image_path)
     print(f"Finding images in {image_path}")
@@ -92,6 +98,7 @@ def rectify(
 
     createOutputFileSystem(args)  # only create output filesystem once we are sure that there are no obvious error
 
+    print("\nApplyling rectification\n")
     verticalErrors = []
     for image_inx in range(len(image_names)):  # for each image index
         print(f"image pair {image_inx}/{len(image_names) - 1}")
@@ -151,7 +158,7 @@ def rectify(
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
-    print("Rectification Finished! Output files written to " + args.paths.output_path)
+    print("\nRectification Finished! Output images written to " + args.paths.output_path+"\n")
     verticalErrors = np.array(verticalErrors)
     print(f"vertical errors mean: {np.mean(verticalErrors)}, std: {np.std(verticalErrors)}")
     print(f"    min: {np.min(verticalErrors)}, for image pair: {np.argmin(verticalErrors)}")
