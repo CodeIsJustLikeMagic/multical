@@ -24,7 +24,7 @@ def read_from_workspace(path):
         final = poses._extend(poses=poses.poses @ np.expand_dims(inv, 0))
         return final
 
-    def calibrationJson_cam_prams():
+    def calibrationJson_cam_prams(): # outputs just like Json file (opencv coordinate system)
         poses = calibration.camera_poses.pose_table
         inv = np.linalg.inv(poses.poses[0])
         finale = poses._extend(poses=poses.poses @ np.expand_dims(inv, 0))
@@ -66,7 +66,6 @@ def read_from_workspace(path):
                                for name, camera
                                in zip(names, calibration.cameras.param_objects)]
 
-    board_poses = calibration.board_poses
     board_poses_2 = tables.expand_boards(calibration.pose_estimates)
     board_poses_2 = [poses for poses in
                      board_poses_2._sequence()]  # each item is a list of poses for each board in boards.yaml.

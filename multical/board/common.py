@@ -34,6 +34,9 @@ def has_min_detections_grid(grid_size, ids, min_points, min_rows):
   return ids.size >= min_points and all(has_rows)
 
 def estimate_pose_points(board, camera, detections):
+    """
+    estimates rvec and tvec of board based on image points and camera intrinsic info
+    """
     if not board.has_min_detections(detections):
         return None
 

@@ -21,7 +21,7 @@ def initialise_with_images(ws : Workspace, boards, camera_images,
 
 
     ws.add_camera_images(camera_images, j=runtime.num_threads)
-    ws.detect_boards(boards, load_cache=not runtime.no_cache, j=runtime.num_threads)
+    ws.detect_boards(boards, load_cache=not runtime.no_cache, j=runtime.num_threads)# detects board image points and saves them in ws.point_table
 
     calib = map_none(load_calibration, camera_opts.calibration)
 
@@ -38,6 +38,9 @@ def initialise_with_images(ws : Workspace, boards, camera_images,
         motion_model=get_motion_model(camera_opts.motion_model),
         camera_poses=calib.camera_poses if calib is not None else None
       )
+
+
+
     return ws
 
 
