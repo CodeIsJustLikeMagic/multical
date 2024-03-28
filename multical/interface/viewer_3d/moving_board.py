@@ -40,14 +40,10 @@ class MovingBoard(object):
 
     camera_poses = tables.inverse(calib.pose_estimates.camera)
     self.camera_set = CameraSet(self.viewer, camera_poses, self.meshes.camera)
-    print("camera_poses", camera_poses)
-    print("board set for moving board !!!")
     board_poses = tables.expand_boards(calib.pose_estimates)
     self.board_sets = [
       BoardSet(self.viewer, poses, self.meshes.board, board_colors)
         for poses in board_poses._sequence()]
-    print("board_poses _sequence()", [poses for poses in board_poses._sequence()])
-
     exportcameraandboards(None, camera_poses, None, struct(poses=board_poses.poses[0], valid=board_poses.valid[0]), "meshes")
 
     self.axis_set = AxisSet(self.viewer, self.meshes.axis, camera_poses)

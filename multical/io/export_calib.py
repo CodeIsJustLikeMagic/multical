@@ -113,18 +113,52 @@ def export_json_domeformat(calib, names, filenames, master=None):
         calib = calib.with_master(master)  # transforms camera poses
 
     camera_poses = calib.camera_poses.pose_table  # calibration.camera_poses
-    valid_camera_poses = {name: extrinsic for name, extrinsic, valid in
-                          zip(names.camera, camera_poses.poses, camera_poses.valid)}
+    camera_poses = {name: extrinsic for name, extrinsic in
+                          zip(names.camera, camera_poses.poses)}
     camera_view_matrix_json = [{"camera_id": name,
-                                "extrinsics": {"view_matrix": valid_camera_poses[name].flatten().tolist()},
+                                "extrinsics": {"view_matrix": camera_poses[name].flatten().tolist()},
                                 "intrinsics": {"camera_matrix": camera.intrinsic.flatten().tolist(),
                                                "resolution": camera.image_size,
                                                "distortion_coefficients": camera.dist.flatten().tolist()}}
                                for name, camera
                                in zip(names.camera, calib.cameras)]
 
-
-    master_info = "" if master is None else "Camera poses relative to camera " + master + "."
+    master_info = "" if master is None else "Camera poses relative to camera " + master + ". "
 
     return {"meta": master_info + "Extrinsics use OpenCV coordinate system (left-hand, x left, z forward, y down)",
             "cameras": camera_view_matrix_json}
+
+
+def export_camera_and_boards(calib, names, master=None):
+    from multical import tables
+    if master is not None:
+        calib = calib.with_master(master)
+
+    camera_poses = tables.inverse(calib.pose_estimates.camera)
+    board_poses = tables.expand_boards(calib.pose_estimates)  # set of board poses for each image pair
+    board_poses = struct(poses=board_poses.poses[0], valid=board_poses.valid[0])  # board poses for first image pair
+    camnames = names.camera
+    boardnames = names.board
+    if camnames is None:
+        camnames = [str(indx) for indx in range(len(camera_poses.poses))]
+    if boardnames is None:
+        boardnames = [str(indx) for indx in range(len(board_poses.poses))]
+
+    valid_camera_poses = {name: extrinsic for name, extrinsic in
+                          zip(camnames, camera_poses.poses)}
+    camera_view_matrix_json = [{"camera_id": name,
+                                "extrinsics": {"view_matrix": valid_camera_poses[name].flatten().tolist()},
+                                "intrinsics": {"camera_matrix": camera.intrinsic.flatten().tolist(),
+                                               "resolution": camera.image_size,
+                                               "distortion_coefficients": camera.dist.flatten().tolist()}}
+                               for name, camera, valid
+                               in zip(camnames, calib.cameras, camera_poses.valid) if valid]
+
+    board_poses_json = [{"board_name": name, "extrinsics": {"view_matrix": extrinsicMatrix.flatten().tolist()}}
+                        for name, extrinsicMatrix, valid
+                        in zip(boardnames, board_poses.poses, board_poses.valid)
+                        if valid]
+
+    return {"meta": "camera and board poses relative to camera 0",
+            "cameras": camera_view_matrix_json,
+            "boards": board_poses_json}
