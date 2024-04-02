@@ -1,0 +1,29 @@
+common:
+  _type_: 'charuco'
+  size: [9, 12]
+  aruco_dict: '5X5_1000'
+  square_length: 0.090
+  marker_length: 0.065
+
+  min_rows: 3
+  min_points: 15
+
+boards:
+  charuco_small_0:
+    aruco_offset: 0
+
+  charuco_small_1:
+    aruco_offset: 60
+
+  charuco_small_2:
+    aruco_offset: 120
+
+  charuco_small_3:
+    aruco_offset: 180
+
+  charuco_small_4:
+    aruco_offset: 270
+
+aruco_params:
+  adaptiveThreshWinSizeMax: 200
+  adaptiveThreshWinSizeStep: 50

@@ -19,6 +19,7 @@ from multical.config.arguments import *
 class Intrinsic:
   """Run separate intrinsic calibration for set of cameras"""
   paths     : PathOpts = field(default_factory=PathOpts)#PathOpts(name="intrinsic")
+  paths.name = "intrinsic"
   camera    : CameraOpts = field(default_factory=CameraOpts)
   runtime   : RuntimeOpts = field(default_factory=RuntimeOpts)
 

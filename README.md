@@ -120,11 +120,11 @@ Yes - this is the default, the same images will be used for both intrinsic and e
 
 Yes - first calibrate separate intrinsic-only calibration (with images not needing to be corresponding), this will produce a calibration per camera in `intrinsic.json`.
 
-`multical intrinsic --input_path intrinsic_images` 
+`multical intrinsic --image_path intrinsic_images` 
 
 Extrinsic-only calibration can then be performed using the known intrinsic parameters with `--calibration` to specify a prior intrinsic calibration to use, combined with `--fix_intrinsic` in order to avoid adjusting those parameters.
 
-`multical calibrate --input_path extrinsic_images --calibration intrinsic_images/intrinsic.json --fix_intrinsic`
+`multical calibrate --image_path extrinsic_images --calibration intrinsic_images/intrinsic.json --fix_intrinsic`
 
 
 ### How can I diagnose a bad calibration?
@@ -143,7 +143,7 @@ Extrinsic-only calibration can then be performed using the known intrinsic param
 
 * Compare a calibration against a different image set, captured with the same cameras. Fix camera parameters with `--fix_intrinsic` and `--fix_camera_poses` and calibrate on the alternative image set:
 
-`multical calibrate --input_path alternative_images --calibration calibration.json --fix_intrinsic --fix_camera_poses`
+`multical calibrate --image_path alternative_images --calibration calibration.json --fix_intrinsic --fix_camera_poses`
 
 The reprojection error will be high if the camera parameters and poses don't match the alternative image set well.
 

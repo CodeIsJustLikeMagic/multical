@@ -114,7 +114,7 @@ def export_json_domeformat(calib, names, filenames, master=None):
 
     camera_poses = calib.camera_poses.pose_table  # calibration.camera_poses
     camera_poses = {name: extrinsic for name, extrinsic in
-                          zip(names.camera, camera_poses.poses)}
+                    zip(names.camera, camera_poses.poses)}
     camera_view_matrix_json = [{"camera_id": name,
                                 "extrinsics": {"view_matrix": camera_poses[name].flatten().tolist()},
                                 "intrinsics": {"camera_matrix": camera.intrinsic.flatten().tolist(),
@@ -150,7 +150,12 @@ def export_camera_and_boards(calib, names, master=None):
                                 "extrinsics": {"view_matrix": valid_camera_poses[name].flatten().tolist()},
                                 "intrinsics": {"camera_matrix": camera.intrinsic.flatten().tolist(),
                                                "resolution": camera.image_size,
-                                               "distortion_coefficients": camera.dist.flatten().tolist()}}
+                                               "distortion_coefficients": camera.dist.flatten().tolist()},
+                                "intrinsics_auxiliary": {
+                                    "field_of_view_deg": [
+                                        np.rad2deg(2 * np.arctan2(camera.image_size[0], 2 * camera.intrinsic[0, 0])),
+                                        np.rad2deg(2 * np.arctan2(camera.image_size[1], 2 * camera.intrinsic[1, 1]))]
+                                }}
                                for name, camera, valid
                                in zip(camnames, calib.cameras, camera_poses.valid) if valid]
 
