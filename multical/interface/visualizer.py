@@ -25,7 +25,6 @@ def visualize(workspace):
   app = QtWidgets.QApplication([])
 
   vis = Visualizer()
-  print("created Visualizer")
 
   vis.update_workspace(workspace)
   vis.showMaximized()

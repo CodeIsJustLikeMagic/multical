@@ -130,7 +130,3 @@ class CharucoBoard(Parameters, Board):
       'marker_length', 'square_length', 'min_rows', 'min_points',
       'aruco_dict', 'aruco_offset'
     ])
-
-  def image(id, catid, img1, img2, alt):
-    ret = '<p class="storyintro"><a href="index.php?option=com_content&amp;view=article&amp;id='+id+';catid=' + catid + '"><img src="' + img1 + '" alt="' + alt + '" width="299" height="300" class="desktop" style="margin-right: 10px; float: left;" onmouseover="this.src=\'' + img2 + '\';" onmouseout="this.src=\'' + img1 + '\';" /></a></p>' + '<label class="storyintro phone"> <input type="checkbox" class="image-toggler" /> <img src="' + img1 + '" alt="' + alt + '" class="storyimagephone1" /> <img src="' + img2 + '" alt="' + alt2 + '" class="storyimagephone2" loading="lazy" /> </label>'
-    print(ret)

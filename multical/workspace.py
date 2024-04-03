@@ -165,7 +165,6 @@ class Workspace:
     def calibrate_single(self, camera_model, fix_aspect=False, has_skew=False, max_images=None, isFisheye=False):
         assert self.detected_points is not None, "calibrate_single: no points found, first use detect_boards to find corner points"
 
-        print(f"Detections: {self.detected_points}")
         check_detections(self.names.camera, self.boards, self.detected_points)
 
         info("Calibrating single cameras..")

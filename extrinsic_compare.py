@@ -57,7 +57,6 @@ def read_from_workspace(path):
 
     valid_camera_poses = {name: extrinsic for name, extrinsic, valid in
                           zip(names, cam_poses, camera_poses.valid)}
-    print("camera poses", valid_camera_poses, "camera poses end")
     camera_view_matrix_json = [{"camera_id": name,
                                 "extrinsics": {"view_matrix": valid_camera_poses[name].flatten().tolist()},
                                 "intrinsics": {"camera_matrix": camera.intrinsic.flatten().tolist(),

@@ -48,7 +48,6 @@ def pre_process():
         f = os.path.join(in_directory, filename)
         # checking if it is a file
         if os.path.isfile(f):
-            print(f)
             camindex = (f.split("cam")[-1]).split("frame")[0]
             frameindex = (f.split("frame")[-1]).split(".png")[0]
             image = cv2.imread(f)
