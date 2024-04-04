@@ -24,6 +24,9 @@ boards:
   charuco_small_4:
     aruco_offset: 270
 
+  chaurco_small_5:
+    aruco_offset: 330
+
 aruco_params:
   adaptiveThreshWinSizeMax: 200
   adaptiveThreshWinSizeStep: 50
