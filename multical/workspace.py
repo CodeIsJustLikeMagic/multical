@@ -165,13 +165,15 @@ class Workspace:
     def calibrate_single(self, camera_model, fix_aspect=False, has_skew=False, max_images=None, isFisheye=False):
         assert self.detected_points is not None, "calibrate_single: no points found, first use detect_boards to find corner points"
 
+        # check if every camera has at least one image with detected board.
+        # (Board is only detected correctly if minimum amount of corners are detected as defined in boards.yaml file)
         check_detections(self.names.camera, self.boards, self.detected_points)
 
         info("Calibrating single cameras..")
         if not isFisheye:
             self.cameras, errs = calibrate_cameras(
                 self.boards,
-                # info for each board (aruco_dict, size, marker length, square length etc as definded in board.yaml)
+                # info for each board (aruco_dict, size, marker length, square length etc. as definded in board.yaml)
                 self.detected_points,  # corners and ids detected by each camera
                 self.image_size,
                 model=camera_model,
