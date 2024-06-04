@@ -64,7 +64,7 @@ def read_calibration_data_domejson(calibration_json_path): #expects dome formate
     cameras = [CameraParameters(camera["camera_id"], # name
                                 np.array(camera["intrinsics"]["camera_matrix"]).reshape(3,3), # intrinsic matrix
                                 np.array(camera["intrinsics"]["distortion_coefficients"]), # distortion coeffs
-                                matrix.split(np.array(camera["extrinsics"]["view_matrix"]).reshape(4, 4))[0], # rotation matrix
+                                matrix.sprelit(np.array(camera["extrinsics"]["view_matrix"]).reshape(4, 4))[0], # rotation matrix
                                 matrix.split(np.array(camera["extrinsics"]["view_matrix"]).reshape(4, 4))[1], # translation vector
                                 np.array(camera["intrinsics"]["resolution"])) # resolution
                for camera in data["cameras"]]

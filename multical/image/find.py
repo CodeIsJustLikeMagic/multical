@@ -3,7 +3,7 @@ import os
 from natsort import natsorted
 
 
-image_extensions = ['jpg', 'jpeg', 'png', 'ppm', 'bmp']
+image_extensions = ['jpg', 'jpeg', 'png', 'ppm', 'bmp', 'tif']
 
 def has_extension(extensions, filename):
     return any(filename.lower().endswith("." + extension) for extension in extensions)

@@ -31,7 +31,7 @@ def calibrate(args):
   setup_logging(args.runtime.log_level, [ws.log_handler], log_file=path.join(output_path, f"{args.paths.name}.txt"))
 
   boards = find_board_config(args.paths.image_path, board_file=args.paths.boards)
-  camera_images = find_camera_images(args.paths.image_path, 
+  camera_images = find_camera_images(args.paths.image_path, # camera_images = path to camera folders, cameras = list of camera ids (cam folder names), image_names= basename of matching frame names (image0.tif, image1.tif ...), file_names = absolute path of all images
     args.paths.cameras, args.paths.camera_pattern, limit=args.paths.limit_images)
 
   initialise_with_images(ws, boards, camera_images, args.camera, args.runtime)
